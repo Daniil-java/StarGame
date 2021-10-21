@@ -1,5 +1,6 @@
 package gb.ru.screen;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -10,7 +11,7 @@ public class MenuScreen extends BaseScreen {
 
     private Texture img;
     private Vector2 touch;
-    private Vector2 touch2;
+    private Vector2 pos;
     private Vector2 v;
 
     @Override
@@ -18,16 +19,21 @@ public class MenuScreen extends BaseScreen {
         super.show();
         img = new Texture("badlogic.jpg");
         touch = new Vector2();
-        v = new Vector2(1, 1); //Изначально не должна ехать. Должна ехать туда, куда укажут.
+        pos = new Vector2();
+        v = new Vector2();
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
         batch.begin();
-        batch.draw(img, touch.x, touch.y);
+        batch.draw(img, pos.x, pos.y);
         batch.end();
-        touch.add(v);
+        if(pos.dst(touch) <= v.len()) {
+            pos.set(touch);
+        } else {
+            pos.add(v);
+        }
     }
 
     @Override
@@ -39,6 +45,15 @@ public class MenuScreen extends BaseScreen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+
+        v.set(touch.cpy().sub(pos)).setLength(10f);
         return super.touchDown(screenX, screenY, pointer, button);
     }
+
+//    @Override
+//    public boolean mouseMoved(int screenX, int screenY) {     //Гоняется за курсором
+//        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+//        v.set(touch.cpy().sub(pos)).setLength(10);
+//        return super.mouseMoved(screenX, screenY);
+//    }
 }
