@@ -1,6 +1,8 @@
 package gb.ru.sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -30,6 +32,11 @@ public class MainShip extends Sprite {
 
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
+
+    private float timeSeconds = 0f;
+    private float period = 0.5f;
+
+    private Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
@@ -67,6 +74,11 @@ public class MainShip extends Sprite {
         }
         if (getRight() < worldBounds.getLeft()) {
             setLeft(worldBounds.getRight());
+        }
+        timeSeconds +=Gdx.graphics.getDeltaTime();
+        if(timeSeconds > period){
+            timeSeconds -= period;
+            shoot();
         }
     }
 
@@ -164,6 +176,7 @@ public class MainShip extends Sprite {
     }
 
     private void shoot() {
+        sound.play(1.0f);
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, this.pos, bulletV, worldBounds, bulletHeight, damage);
     }
