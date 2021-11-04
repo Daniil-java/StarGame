@@ -7,11 +7,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
 import gb.ru.base.BaseScreen;
 import gb.ru.math.Rect;
 import gb.ru.pool.BulletPool;
 import gb.ru.pool.EnemyPool;
 import gb.ru.sprite.Background;
+import gb.ru.sprite.EnemyShip;
 import gb.ru.sprite.MainShip;
 import gb.ru.sprite.Star;
 import gb.ru.util.EnemyEmitter;
@@ -63,6 +66,7 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         update(delta);
+        checkCollisions();
         freeAllDestroyed();
         draw();
     }
@@ -121,6 +125,15 @@ public class GameScreen extends BaseScreen {
         enemyPool.updateActiveObjects(delta);
         mainShip.update(delta);
         enemyEmitter.generate(delta);
+    }
+
+    private void checkCollisions() {
+        List<EnemyShip> enemyShipList = enemyPool.getActiveObjects();
+        for (EnemyShip enemyShip : enemyShipList) {
+            if (!enemyShip.isDestroyed() && mainShip.isOutside(enemyShip)) {
+                enemyShip.isDestroyed();
+            }
+        }
     }
 
     private void freeAllDestroyed() {
