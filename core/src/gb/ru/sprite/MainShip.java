@@ -159,6 +159,14 @@ public class MainShip extends Ship {
         v.setZero();
     }
 
-
-
+    public void startNewGame() {
+        this.hp = 1;
+        stop();
+        pressedLeft = false;
+        pressedRight = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+        this.pos.x = worldBounds.pos.x;
+        flushDestroy();
+    }
 }
