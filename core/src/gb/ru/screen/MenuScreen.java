@@ -101,4 +101,8 @@ public class MenuScreen extends BaseScreen {
         batch.end();
     }
 
+    public Game getGame() {
+        return game;
+    }
+
 }
